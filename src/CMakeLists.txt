@@ -1,8 +1,8 @@
-file(GLOB HEADER_LIST CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/../include/${CMAKE_PROJECT_NAME}/*.hpp")
+file(GLOB HEADER_LIST CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/../include/ph_proxy/*.hpp")
 
 
 foreach(file ${HEADER_LIST})
-    source_group (TREE ${CMAKE_CURRENT_LIST_DIR}/../include/${CMAKE_PROJECT_NAME}
+    source_group (TREE ${CMAKE_CURRENT_LIST_DIR}/../include/ph_proxy
         PREFIX "include"               
         FILES  ${file}
     )
@@ -20,13 +20,13 @@ endforeach()
 
 
 
-add_library (${CMAKE_PROJECT_NAME}
+add_library (ph_proxy
 	${SOURCE_LIST}  ${HEADER_LIST} 
-	# ALIAS ${CMAKE_PROJECT_NAME}::${CMAKE_PROJECT_NAME}
+	# ALIAS ph_proxy::ph_proxy
 )
 
 set_target_properties (
-	${CMAKE_PROJECT_NAME} 
+	ph_proxy 
 
 	PROPERTIES
   		CXX_STANDARD 20
@@ -37,16 +37,16 @@ set_target_properties (
 		""
 )
 # Make override a feature requirement only if available
-target_compile_features (${CMAKE_PROJECT_NAME} 
+target_compile_features (ph_proxy 
 	PUBLIC
   		$<$<COMPILE_FEATURES:cxx_override>:cxx_override>
 )
 # Define the foo_OVERRIDE symbol so it provides the
 # override keyword if available or empty otherwise
-target_compile_definitions (${CMAKE_PROJECT_NAME} 
+target_compile_definitions (ph_proxy 
 	# PUBLIC
-  	# 	$<$<COMPILE_FEATURES:cxx_override>:-D${CMAKE_PROJECT_NAME}_OVERRIDE=override>
-  	# 	$<$<NOT:$<COMPILE_FEATURES:cxx_override>>:-D${CMAKE_PROJECT_NAME}_OVERRIDE>
+  	# 	$<$<COMPILE_FEATURES:cxx_override>:-Dph_proxy_OVERRIDE=override>
+  	# 	$<$<NOT:$<COMPILE_FEATURES:cxx_override>>:-Dph_proxy_OVERRIDE>
 
 	PRIVATE 
 		"$<$<CONFIG:DEBUG>:DEBUG> $<$<CONFIG:RELEASE>:RELEASE>"
@@ -58,31 +58,31 @@ target_compile_definitions (${CMAKE_PROJECT_NAME}
 
 # target_sources (ph_concepts PRIVATE in/platform.hpp)
 
-set_target_properties (${CMAKE_PROJECT_NAME} PROPERTIES CXX_STANDARD 20)
-target_compile_features (${CMAKE_PROJECT_NAME} PUBLIC cxx_std_20)
+set_target_properties (ph_proxy PROPERTIES CXX_STANDARD 20)
+target_compile_features (ph_proxy PUBLIC cxx_std_20)
 
-ph_precompile (TARGET ${CMAKE_PROJECT_NAME} PRIVATE PCH ${std_pch})
+ph_precompile (TARGET ph_proxy PRIVATE PCH ${std_pch})
 
-# add_library (${CMAKE_PROJECT_NAME} ALIAS ${CMAKE_PROJECT_NAME}::${CMAKE_PROJECT_NAME})
+# add_library (ph_proxy ALIAS ph_proxy::ph_proxy)
 # target_link_libraries (lib PRIVATE    ${Vulkan_LIBRARIES} glfw)
-# target_link_libraries (lib PRIVATE ${CMAKE_PROJECT_NAME})
+# target_link_libraries (lib PRIVATE ph_proxy)
 
-target_include_directories (${CMAKE_PROJECT_NAME} PUBLIC ${CMAKE_PROJECT_SOURCE_DIR}/include ph_concepts)
-target_link_libraries (${CMAKE_PROJECT_NAME} PUBLIC ph_concepts)
+target_include_directories (ph_proxy PUBLIC ${CMAKE_PROJECT_SOURCE_DIR}/include ph_concepts)
+target_link_libraries (ph_proxy PUBLIC ph_concepts)
 
 # target_include_directories (ph_concepts PRIVATE ${Boost_INCLUDE_DIRS})
 
-target_compile_features (${CMAKE_PROJECT_NAME} PUBLIC cxx_std_20)
+target_compile_features (ph_proxy PUBLIC cxx_std_20)
 
 # target_compile_options(ph_concepts PUBLIC "-ast-dump  -fsyntax-only")
 
 
-target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/../include/${CMAKE_PROJECT_NAME}>
-    $<INSTALL_INTERFACE:include/${CMAKE_PROJECT_NAME}>
+target_include_directories(ph_proxy PRIVATE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/../include/ph_proxy>
+    $<INSTALL_INTERFACE:include/ph_proxy>
 )
 
-target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC
+target_include_directories(ph_proxy PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/../include>
     $<INSTALL_INTERFACE:include>
 )
@@ -90,7 +90,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC
 if (PROJECT_NAME STREQUAL PROJECT_NAME)
     # set_target_properties (lib PROPERTIES FOLDER "lib/")
 else ()
-    set_target_properties (${CMAKE_PROJECT_NAME} PROPERTIES FOLDER "dependencies/${CMAKE_PROJECT_NAME}")
+    set_target_properties (ph_proxy PROPERTIES FOLDER "dependencies/ph_proxy")
 endif ()
 
 
